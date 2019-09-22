@@ -1,0 +1,35 @@
+version: '2'
+services:
+  backend:
+    image: $IMAGE_DEPLOY
+ 
+    container_name: $PROJECT_NAME
+    volumes:
+      - ./app/:/usr/src/app
+    environment:
+      VIRTUAL_HOST: $VIRTUAL_HOST
+      LC_ALL: en_US.UTF-8
+  mysql:
+      image: mysql:5.5
+      environment:
+        MYSQL_ROOT_PASSWORD: 1234
+        MYSQL_DATABASE: reservation
+      ports:
+        - 3307:3306
+      volumes:
+        - ./docker/mysql/sql:/docker-entrypoint-initdb.d
+      command: mysqld --sql_mode=""
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 1234     
